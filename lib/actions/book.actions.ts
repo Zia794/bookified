@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import { connectToDatabase } from "@/database/mongoose";
 import { CreateBook, TextSegment } from "@/types";
@@ -7,118 +7,139 @@ import Book from "@/database/models/book.model";
 import BookSegment from "@/database/models/book-segment.model";
 
 
-export const checkBookExists = async(title:string) => {
-  try{
+
+
+
+export const getAllBooks = async (search?: string) => {
+  try {
     await connectToDatabase();
-    const slug = generateSlug(title);
-    const existingBook = await Book.findOne({slug}).lean();
-    if(existingBook){
-      return{
-        exists: true,
-        book: serializeData(existingBook)
-      }
-    }
-    return{
-      exists : false
-    }
-  }catch(e){
-    console.error("ERROR checking book exist");
-    return{
-      exist: false,
+
+    // let query = {};
+
+    // if (search) {
+    //   const escapedSearch = escapeRegex(search);
+    //   const regex = new RegExp(escapedSearch, "i");
+    //   query = {
+    //     $or: [{ title: { $regex: regex } }, { author: { $regex: regex } }],
+    //   };
+    // }
+
+    const books = await Book.find().sort({ createdAt: -1 }).lean();
+
+    return {
+      success: true,
+      data: serializeData(books),
+    };
+  } catch (e) {
+    console.error("Error connecting to database", e);
+    return {
+      success: false,
       error: e
-    }
+    };
   }
 };
 
 
 
-export const createBook = async(data: CreateBook) => {
-  try{
+
+
+
+
+export const checkBookExists = async (title: string) => {
+  try {
+    await connectToDatabase();
+    const slug = generateSlug(title);
+    const existingBook = await Book.findOne({ slug }).lean();
+    if (existingBook) {
+      return {
+        exists: true,
+        book: serializeData(existingBook),
+      };
+    }
+    return {
+      exists: false,
+    };
+  } catch (e) {
+    console.error("ERROR checking book exist");
+    return {
+      exist: false,
+      error: e,
+    };
+  }
+};
+
+export const createBook = async (data: CreateBook) => {
+  try {
     await connectToDatabase();
     const slug = generateSlug(data.title);
-    const existingBook = await Book.findOne({slug}).lean();
-    if(existingBook){
+    const existingBook = await Book.findOne({ slug }).lean();
+    if (existingBook) {
       return {
-        success:true,
+        success: true,
         data: serializeData(existingBook),
-        alreadyExists: true
+        alreadyExists: true,
       };
     }
 
-    const book = await Book.create({...data, slug, totalSegments: 0});
-    return{
-      success: true,
-      data: serializeData(book)
-    }
-  } catch(e){
-    console.error("ERROR creating a book " , e);
+    const book = await Book.create({ ...data, slug, totalSegments: 0 });
     return {
-      success:false,
-      error: e
+      success: true,
+      data: serializeData(book),
+    };
+  } catch (e) {
+    console.error("ERROR creating a book ", e);
+    return {
+      success: false,
+      error: e,
     };
   }
-}
+};
 
-export const saveBookSegments = async(bookId: string, clerkId: string, segments: TextSegment[]) => {
-  try{
+export const saveBookSegments = async (
+  bookId: string,
+  clerkId: string,
+  segments: TextSegment[],
+): Promise<{
+  success: boolean;
+  data?: { segmentCreated: number };
+  error?: string;
+}> => {
+  try {
     await connectToDatabase();
     console.log("Saving Book Segments.....");
-    const segmentToInsert = segments.map(({text, segmentIndex, pageNumber, wordCount}) => ({
-      clerkId, bookId, content: text, segmentIndex, pageNumber, wordCount
-    }));
+    const segmentToInsert = segments.map(
+      ({ text, segmentIndex, pageNumber, wordCount }) => ({
+        clerkId,
+        bookId,
+        content: text,
+        segmentIndex,
+        pageNumber,
+        wordCount,
+      }),
+    );
     await BookSegment.insertMany(segmentToInsert);
-    await Book.findByIdAndUpdate(bookId, { totalSegments: segments.length});
+    await Book.findByIdAndUpdate(bookId, { totalSegments: segments.length });
     console.log("Book segments saved successfuly ");
 
     return {
       success: true,
       data: {
-        segmentCreated: segments.length
-      }
-    }
+        segmentCreated: segments.length,
+      },
+    };
+  } catch (e) {
+    console.error("ERROR saving book segments ", e);
 
-  }catch(e){
-    console.error("ERROR saving book segments " , e);
-
-    await BookSegment.deleteMany({bookId});
-    await BookSegment.findByIdAndDelete({bookId});
+    await BookSegment.deleteMany({ bookId });
+    await BookSegment.findByIdAndDelete({ bookId });
     console.log("Deleted book segment and book due to failure to save segment");
+
+    return {
+      success: false,
+      error: "Failed to save book segments",
+    };
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use server";
 // import { CreateBook, TextSegment } from "@/types";
@@ -463,6 +484,3 @@ export const saveBookSegments = async(bookId: string, clerkId: string, segments:
 //     };
 //   }
 // };
-
-
-

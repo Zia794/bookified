@@ -26,9 +26,8 @@ import { toast } from "sonner";
 import {
   checkBookExists,
   createBook,
-  saveBookSegments
+  saveBookSegments,
 } from "@/lib/actions/book.actions";
-
 
 import { useRouter } from "next/navigation";
 import { parsePDFFile } from "@/lib/utils";
@@ -91,7 +90,7 @@ const UploadForm = () => {
 
       const uploadedPdfBlob = await upload(fileTitle, pdfFile, {
         access: "public",
-        handleUploadUrl: "/api/upload",
+        handleUploadUrl: "/api/uploads",
         contentType: "application/pdf",
       });
 
@@ -105,7 +104,7 @@ const UploadForm = () => {
           coverFile,
           {
             access: "public",
-            handleUploadUrl: "/api/upload",
+            handleUploadUrl: "/api/uploads",
             contentType: coverFile.type,
           },
         );
@@ -124,7 +123,7 @@ const UploadForm = () => {
 
         const uploadedCoverBlob = await upload(`${fileTitle}_cover.png`, blob, {
           access: "public",
-          handleUploadUrl: "/api/upload",
+          handleUploadUrl: "/api/uploads",
           contentType: "image/png",
         });
         coverUrl = uploadedCoverBlob.url;
@@ -158,7 +157,6 @@ const UploadForm = () => {
       );
 
       if (!segments.success) {
-
         toast.error("Failed to save book segments ");
         throw new Error("Failed to save book segments");
 

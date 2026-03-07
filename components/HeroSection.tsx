@@ -2,9 +2,9 @@ import React from "react";
 
 const HeroSection = () => {
   return (
-    <section className="py-12">
+    <section className="py-6">
       <div className="max-w-300 mx-auto ">
-        <div className="bg-[#f3e3c9] rounded-2xl p-10 md:p-16 shadow-md ">
+        <div className="bg-[#f3e3c9] rounded-2xl p-10 md:px-16 md:py-4 shadow-md ">
           <div className="grid grid-cols-12 gap-8 items-center">
             {/* Left */}
             <div className="col-span-12 md:col-span-5">
