@@ -182,10 +182,10 @@
     @apply pt-[94px] pb-18 min-h-screen;
   }
   .navItem {
-    @apply px-1 sm:px-3 text-sm sm:text-base font-medium flex items-center cursor-pointer text-[var(--text-primary)];
+    @apply px-1 sm:px-3 text-sm sm:text-base font-medium flex items-center cursor-pointer text-(--text-primary);
   }
   .input-reset {
-    @apply h-12 border-none lg:!text-lg shadow-none focus:outline-none focus-visible:ring-0;
+    @apply h-12 border-none lg:text-lg! shadow-none focus:outline-none focus-visible:ring-0;
   }
   .label {
     @apply text-lg mb-1 !font-medium;
