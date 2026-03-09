@@ -246,10 +246,10 @@
     @apply !w-full !h-12 rounded-lg;
   }
   .volume {
-    @apply !ml-auto w-4 h-4 animate-pulse text-[var(--accent-warm)];
+    @apply !ml-auto w-4 h-4 animate-pulse text-(--accent-warm);
   }
   .select-content {
-    @apply rounded-xl border border-[var(--border-subtle)] max-h-[400px] shadow-[var(--shadow-soft)];
+    @apply rounded-xl border border-(--border-subtle) max-h-[400px] shadow-[var(--shadow-soft)];
   }
   .select-item {
     @apply hover:rounded-lg font-medium text-lg;
