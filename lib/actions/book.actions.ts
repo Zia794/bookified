@@ -30,7 +30,7 @@ export const getAllBooks = async (search?: string) => {
     console.error("Error connecting to database", e);
     return {
       success: false,
-      error: e,
+      error: (e as Error).message || "Internal server error",
     };
   }
 };
