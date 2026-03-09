@@ -5,7 +5,7 @@ import { getBookBySlug } from "@/lib/actions/book.actions";
 import { cn } from "@/lib/utils";
 
 interface BookPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function BookPage({ params }: BookPageProps) {
@@ -15,8 +15,10 @@ export default async function BookPage({ params }: BookPageProps) {
     redirect("/sign-in");
   }
 
+  const { slug } = await params;
+
   // Fetch book by slug
-  const { success, data: book } = await getBookBySlug(params.slug);
+  const { success, data: book } = await getBookBySlug(slug);
   if (!success || !book) {
     redirect("/");
   }
