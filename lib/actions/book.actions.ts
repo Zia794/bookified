@@ -154,6 +154,40 @@ export const getBookBySlug = async (slug: string) => {
   }
 };
 
+export const searchBookSegments = async (
+  bookId: string,
+  query: string,
+  limit: number = 3,
+): Promise<{
+  success: boolean;
+  data: any[];
+  error?: string;
+}> => {
+  try {
+    await connectToDatabase();
+
+    const segments = await BookSegment.find(
+      { bookId, $text: { $search: query } },
+      { score: { $meta: "textScore" } },
+    )
+      .sort({ score: { $meta: "textScore" } })
+      .limit(limit)
+      .lean();
+
+    return {
+      success: true,
+      data: serializeData(segments),
+    };
+  } catch (e) {
+    console.error("Error searching book segments", e);
+    return {
+      success: false,
+      data: [],
+      error: (e as Error).message || "Internal server error",
+    };
+  }
+};
+
 // "use server";
 // import { CreateBook, TextSegment } from "@/types";
 // import { connectToDatabase } from "@/database/mongoose";
