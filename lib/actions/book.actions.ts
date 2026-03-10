@@ -5,6 +5,8 @@ import { CreateBook, TextSegment } from "@/types";
 import { generateSlug, serializeData } from "../utils";
 import Book from "@/database/models/book.model";
 import BookSegment from "@/database/models/book-segment.model";
+import { revalidatePath } from "next/cache";
+
 
 export const getAllBooks = async (search?: string) => {
   try {
@@ -21,7 +23,7 @@ export const getAllBooks = async (search?: string) => {
     // }
 
     const books = await Book.find().sort({ createdAt: -1 }).lean();
-
+    
     return {
       success: true,
       data: serializeData(books),
@@ -72,6 +74,7 @@ export const createBook = async (data: CreateBook) => {
     }
 
     const book = await Book.create({ ...data, slug, totalSegments: 0 });
+    revalidatePath('/');
     return {
       success: true,
       data: serializeData(book),
@@ -168,7 +171,12 @@ export const searchBookSegments = async (
 
     const segments = await BookSegment.find(
       { bookId, $text: { $search: query } },
-      { score: { $meta: "textScore" } },
+      { content : 1,
+        segmentIndex: 1,
+        pageNumber: 1,
+        wordCount: 1,
+        score: {$meta: "textScore"},
+       },
     )
       .sort({ score: { $meta: "textScore" } })
       .limit(limit)

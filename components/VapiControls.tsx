@@ -18,6 +18,12 @@ const VapiControls = ({ book }: { book: IBook }) => {
     stop,
     clearError,
   } = useVapi(book);
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
   return (
     <>
       <div className="max-w-4xl mx-auto flex flex-col gap-8">
@@ -68,7 +74,7 @@ const VapiControls = ({ book }: { book: IBook }) => {
                 </span>
               </div>
               <div className="vapi-status-indicator">
-                <span className="vapi-status-text">0:00/15:00</span>
+                <span className="vapi-status-text">{formatDuration(duration)}/15:00</span>
               </div>
             </div>
           </div>

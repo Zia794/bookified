@@ -13,9 +13,9 @@ export const startVoiceSession = async (clerkId:string, bookId:string):Promise<S
     const session = await VoiceSession.create({
       clerkId,
       bookId, 
-      startdAt:new Date(),
+      startedAt:new Date(),
       billingPeriodStart: getCurrentBillingPeriodStart(),
-      duration: 0,
+      durationSeconds: 0,
     });
     return{
       success : true,
