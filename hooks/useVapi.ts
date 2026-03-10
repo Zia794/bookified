@@ -197,6 +197,10 @@ export const useVapi = (book: IBook) => {
     vapiInstance.on("message", handlers.message);
 
     return () => {
+      if(timerRef.current){
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
       vapiInstance.off("call-start", handlers["call-start"]);
       vapiInstance.off("call-end", handlers["call-end"]);
       vapiInstance.off("speech-start", handlers["speech-start"]);
@@ -245,7 +249,10 @@ export const useVapi = (book: IBook) => {
     isStoppingRef.current = true;
     await getVapi().stop();
   };
-  const clearError = async () => {};
+  const clearError = () => {
+    setLimitError(null);
+    setIsBillingError(false);
+  };
   return {
     status,
     isActive,
@@ -253,6 +260,8 @@ export const useVapi = (book: IBook) => {
     currentMessage,
     currentUserMessage,
     duration,
+    limitError,
+    isBillingError
     start,
     stop,
     clearError,

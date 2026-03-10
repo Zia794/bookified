@@ -168,7 +168,12 @@ export const searchBookSegments = async (
 
     const segments = await BookSegment.find(
       { bookId, $text: { $search: query } },
-      { score: { $meta: "textScore" } },
+      { content : 1,
+        segmentIndex: 1,
+        pageNumber: 1,
+        wordCount: 1,
+        score: {$meta: "textScore"},
+       },
     )
       .sort({ score: { $meta: "textScore" } })
       .limit(limit)
