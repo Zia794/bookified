@@ -1,3 +1,4 @@
+//'use client'
 import {
   startVoiceSession,
   endVoiceSession,
@@ -261,7 +262,7 @@ export const useVapi = (book: IBook) => {
     currentUserMessage,
     duration,
     limitError,
-    isBillingError
+    isBillingError,
     start,
     stop,
     clearError,
