@@ -1,7 +1,7 @@
 export const PLANS = {
-    FREE: 'free',
-    STANDARD: 'standard',
-    PRO: 'pro',
+    FREE: 'free_user',
+    STANDARD: 'standard_plan',
+    PRO: 'pro_plan',
 } as const;
 
 export type PlanType = typeof PLANS[keyof typeof PLANS];
