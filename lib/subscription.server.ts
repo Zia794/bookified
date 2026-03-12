@@ -6,8 +6,8 @@ export const getUserPlan = async (): Promise<PlanType> => {
 
     if (!userId) return PLANS.FREE;
 
-    if (has({ plan: "pro" })) return PLANS.PRO;
-    if (has({ plan: "standard" })) return PLANS.STANDARD;
+    if (has({ plan: "pro_plan" })) return PLANS.PRO;
+    if (has({ plan: "standard_plan" })) return PLANS.STANDARD;
 
     return PLANS.FREE;
 }
