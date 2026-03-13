@@ -23,7 +23,7 @@ export const startVoiceSession = async (
 
     const sessionCount = await VoiceSession.countDocuments({
       clerkId,
-      billingPeriodStart,
+      billingPeriodStart
     });
 
     if (sessionCount >= limits.maxSessionsPerMonth) {
@@ -42,13 +42,13 @@ export const startVoiceSession = async (
       bookId,
       startedAt: new Date(),
       billingPeriodStart,
-      durationSeconds: 0,
+      durationSeconds: 0
     });
 
     return {
       success: true,
       sessionId: session._id.toString(),
-      maxDurationMinutes: limits.maxDurationPerSession,
+      maxDurationMinutes: limits.maxDurationPerSession
     };
   } catch (e) {
     console.error("Error starting voice session", e);
